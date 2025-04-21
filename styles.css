@@ -1,0 +1,37 @@
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    width: 480px;
+    height: 480px;
+    margin: 20px auto;
+    border: 2px solid black;
+}
+.cell {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.black { background-color: #b58863; }
+.white { background-color: #f0d9b5; }
+.piece {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.black-piece { background-color: black; color: white; }
+.white-piece { background-color: white; color: black; border: 2px solid black; }
+.selected { outline: 3px solid yellow; }
+.scoreboard {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
