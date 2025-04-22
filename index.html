@@ -5,17 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeu de Dames</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <h1 style="text-align: center;">Jeu de Dames</h1>
-    <div class="scoreboard">
-        <p>Joueur Noir (⚫) : <span id="black-score">0</span></p>
-        <p>Joueur Blanc (⚪) : <span id="white-score">0</span></p>
-    </div>
-    <div class="board" id="board"></div>
-    <script src="script.js">
-       
-    </script>
+
+    <h1>Jeu de Dames</h1>
+
+    <!-- Navigation principale -->
+    <nav class="main-nav">
+        <button data-section="setup-section" class="nav-button active">Nouvelle Partie</button>
+        <button data-section="game-section" class="nav-button" disabled>Jeu en cours</button> <!-- Désactivé au début -->
+        <button data-section="stats-section" class="nav-button">Statistiques</button>
+    </nav>
+
+    <!-- Conteneur principal pour les sections -->
+    <main id="app-container">
+
+        <!-- Section Configuration Nouvelle Partie -->
+        <section id="setup-section" class="app-section active-section">
+            <h2>Nouvelle Partie</h2>
+            <div class="player-setup">
+                <label>Joueur Noir: <input type="text" id="player-black-name" value="Noir"></label>
+                <label>Joueur Blanc: <input type="text" id="player-white-name" value="Blanc"></label>
+                <button id="start-game-button" class="button-style">Commencer</button>
+            </div>
+            <p>Ou <button id="load-game-button" class="link-button">charger la partie précédente</button> si disponible.</p>
+        </section>
+
+        <!-- Section Jeu en Cours -->
+        <section id="game-section" class="app-section">
+            <div class="game-info">
+                <div class="score"><span id="black-player-label">Noir</span>: <span id="black-score">0</span></div>
+                <div class="turn">
+                    Tour: <span id="current-turn" data-player="black">Noir</span>
+                    <div class="timer">Temps: <span id="timer-display">--</span>s</div>
+                </div>
+                <div class="score"><span id="white-player-label">Blanc</span>: <span id="white-score">0</span></div>
+            </div>
+
+            <div id="board-container">
+                <div id="board">
+                    <!-- Le plateau sera généré par JavaScript -->
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button id="reset-button" class="button-style">Nouvelle Partie</button> <!-- Renommé pour clarté -->
+                <button id="resign-button" class="button-style danger">Abandonner</button>
+                <button id="pause-button" class="button-style">Pause</button>
+            </div>
+            
+        </section>
+
+        <!-- Section Statistiques -->
+        <section id="stats-section" class="app-section">
+            <h2>Statistiques</h2>
+            <div id="win-counts">
+                <h3>Victoires</h3>
+                <ul id="win-counts-list"></ul>
+            </div>
+            <div id="game-history">
+                <h3>Historique des Parties</h3>
+                <!-- Remplacement de <ul> par <table> -->
+                <div class="table-container">
+                    <table id="game-history-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Gagnant</th>
+                                <th>Perdant</th>
+                                <th>Raison</th>
+                                <th>Score</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody id="game-history-list">
+                            <!-- L'historique sera généré par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Conteneur pour les notifications (hors du main pour position:fixed) -->
+    <div id="notifications"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>

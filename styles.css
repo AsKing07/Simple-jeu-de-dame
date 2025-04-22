@@ -1,37 +1,476 @@
-.board {
+/* ==========================================================================
+   Styles Généraux & Mise en page Body
+   ========================================================================== */
+   body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+    color: #333;
+    padding-top: 20px;
+    padding-bottom: 50px; /* Espace en bas */
+    margin: 0; /* Assurer pas de marge par défaut */
+}
+
+h1 {
+    color: #4a4a4a;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   Navigation Principale (Onglets)
+   ========================================================================== */
+.main-nav {
+    margin-bottom: 25px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.nav-button {
+    padding: 8px 15px;
+    font-size: 1em;
+    font-weight: 600;
+    color: #555;
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent; /* Indicateur inactif */
+    cursor: pointer;
+    transition: color 0.3s ease, border-bottom-color 0.3s ease;
+}
+
+.nav-button:hover {
+    color: #000;
+}
+
+.nav-button.active {
+    color: #8b4513; /* Marron foncé */
+    border-bottom-color: #8b4513;
+}
+
+.nav-button:disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Conteneur Principal & Sections d'Application
+   ========================================================================== */
+#app-container {
+    width: 90%;
+    max-width: 500px; /* Limite la largeur pour la lisibilité */
+}
+
+.app-section {
+    display: none; /* Cacher par défaut */
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.app-section.active-section {
+    display: flex; /* Afficher la section active */
+}
+
+.app-section h2 {
+    color: #4a4a4a;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+/* ==========================================================================
+   Section Configuration Nouvelle Partie (#setup-section)
+   ========================================================================== */
+#setup-section .player-setup {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: stretch; /* Inputs de même largeur */
+    width: 80%; /* Un peu moins large */
+    max-width: 350px;
+}
+
+#setup-section label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+#setup-section input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+#setup-section .link-button { /* Style pour le bouton "charger" */
+    background: none;
+    border: none;
+    color: #8b4513;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.9em;
+}
+
+#setup-section .link-button:hover {
+    color: #a0522d;
+}
+
+/* ==========================================================================
+   Section Jeu en Cours (#game-section)
+   ========================================================================== */
+
+/* --- Informations de Jeu (Score, Tour, Timer) --- */
+#game-section .game-info {
+    width: 100%;
+    max-width: 400px; /* Aligné avec le plateau */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Aligner en haut */
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.game-info .score {
+    text-align: center; /* Centrer le score et le nom */
+}
+
+.game-info .turn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.turn #current-turn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-bottom: 4px; /* Espace avant le timer */
+}
+
+/* Style dynamique pour l'indicateur de tour */
+#current-turn[data-player="black"] {
+    background-color: #333;
+    color: #fff;
+}
+
+#current-turn[data-player="white"] {
+    background-color: #eee;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+/* --- Timer --- */
+.timer {
+    font-size: 0.85em;
+    font-weight: 400;
+    color: #555;
+}
+
+#timer-display {
+    font-weight: 600;
+    min-width: 20px;
+    display: inline-block;
+    text-align: right;
+}
+
+.timer.low-time {
+    color: #d9534f; /* Rouge avertissement */
+    animation: pulse-timer 1s infinite;
+}
+
+/* --- Conteneur du Plateau --- */
+#game-section #board-container {
+    padding: 10px;
+    background-color: #c8a37a; /* Bois clair */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px; /* Espace avant les contrôles */
+}
+
+/* --- Plateau de Jeu --- */
+#board {
+    width: 400px;
+    height: 400px;
     display: grid;
-    grid-template-columns: repeat(8, 60px);
-    grid-template-rows: repeat(8, 60px);
-    width: 480px;
-    height: 480px;
-    margin: 20px auto;
-    border: 2px solid black;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    border: 3px solid #8b4513; /* Bois foncé */
+    /* Flou pour la pause */
+    transition: filter 0.3s ease-in-out;
 }
+
+/* --- Cellules --- */
 .cell {
-    width: 60px;
-    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; /* Pour indicateurs */
 }
-.black { background-color: #b58863; }
-.white { background-color: #f0d9b5; }
-.piece {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    font-weight: bold;
+
+.cell.white {
+    background-color: #f0d9b5; /* Beige clair */
+}
+
+.cell.black {
+    background-color: #b58863; /* Marron moyen */
+}
+
+/* Indicateur visuel pour case possible (petit cercle) */
+.cell.possible-move {
+    background-color: rgba(144, 238, 144, 0.7) !important; /* Vert clair semi-transparent */
     cursor: pointer;
 }
-.black-piece { background-color: black; color: white; }
-.white-piece { background-color: white; color: black; border: 2px solid black; }
-.selected { outline: 3px solid yellow; }
-.scoreboard {
-    text-align: center;
-    font-size: 20px;
-    margin-bottom: 20px;
+
+.cell.possible-move::after {
+    content: '';
+    position: absolute;
+    width: 25%;
+    height: 25%;
+    background-color: rgba(0, 100, 0, 0.4); /* Vert foncé transparent */
+    border-radius: 50%;
+    animation: pulse-dot 1.5s infinite ease-in-out;
+}
+
+/* --- Pièces --- */
+.piece {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3), 0 2px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, outline 0.2s ease;
+    position: relative; /* Pour couronne */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.black-piece {
+    background: radial-gradient(circle at 50% 30%, #555, #111);
+    border: 2px solid #000;
+}
+
+.white-piece {
+    background: radial-gradient(circle at 50% 30%, #fff, #ccc);
+    border: 2px solid #999;
+}
+
+/* Effet au survol */
+.piece:hover {
+    transform: scale(1.05);
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Pièce sélectionnée */
+.piece.selected {
+    outline: 4px solid #ffcc00; /* Jaune doré */
+    outline-offset: 2px;
+    transform: scale(1.1);
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3), 0 5px 10px rgba(255, 204, 0, 0.5);
+}
+
+/* Dames (Kings) */
+.piece.king::after {
+    content: '👑';
+    font-size: 18px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+.black-piece.king::after {
+   color: #e0e0e0; /* Couronne plus claire sur fond noir */
+}
+
+/* Pièce qui DOIT capturer */
+.piece.must-capture {
+    animation: pulse-border 1.2s infinite;
+}
+
+/* --- Contrôles du Jeu (Boutons sous le plateau) --- */
+#game-section .game-controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.game-controls .button-style {
+    margin-top: 0; /* Annuler marge héritée */
+}
+
+/* ==========================================================================
+   Section Statistiques (#stats-section)
+   ========================================================================== */
+#stats-section {
+    gap: 25px;
+}
+
+#stats-section #win-counts,
+#stats-section #game-history {
+    width: 100%;
+}
+
+#stats-section h3 {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+/* Liste des victoires */
+#stats-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#stats-section li {
+    padding: 5px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+#stats-section li:last-child {
+    border-bottom: none;
+}
+
+/* Tableau de l'historique */
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Scroll horizontal si besoin */
+    max-height: 400px; /* Scroll vertical */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#game-history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#game-history-table th,
+#game-history-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap; /* Empêche le retour à la ligne dans les cellules */
+}
+
+#game-history-table th {
+    background-color: #f8f8f8;
+    font-weight: 600;
+    position: sticky; /* En-tête fixe */
+    top: 0;
+    z-index: 1;
+}
+
+#game-history-table tbody tr:nth-child(even) {
+    background-color: #fdfdfd;
+}
+
+#game-history-table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+/* ==========================================================================
+   Styles Généraux des Boutons
+   ========================================================================== */
+.button-style {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 600;
+    color: white;
+    background-color: #8b4513; /* Marron foncé */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button-style:hover {
+    background-color: #a0522d; /* Marron plus clair */
+}
+
+.button-style:active {
+    transform: scale(0.98);
+}
+
+.button-style.danger {
+    background-color: #d9534f; /* Rouge */
+}
+
+.button-style.danger:hover {
+    background-color: #c9302c; /* Rouge plus foncé */
+}
+
+/* ==========================================================================
+   Notifications
+   ========================================================================== */
+#notifications {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 1000;
+}
+
+.notification {
+    background-color: rgba(50, 50, 50, 0.9);
+    color: white;
+    padding: 12px 20px;
+    margin-top: 10px;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    font-size: 0.95em;
+    max-width: 300px;
+}
+
+.notification.info { background-color: rgba(60, 120, 200, 0.9); }
+.notification.warning { background-color: rgba(230, 160, 40, 0.95); }
+.notification.error { background-color: rgba(200, 60, 60, 0.95); }
+.notification.success { background-color: rgba(60, 180, 90, 0.9); }
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+@keyframes pulse-dot { /* Pour indicateur case possible */
+    0%, 100% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes pulse-border { /* Pour pièce capture obligatoire */
+    0% { box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3), 0 2px 3px rgba(0, 0, 0, 0.2), 0 0 0 0px rgba(255, 0, 0, 0.7); }
+    50% { box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3), 0 2px 3px rgba(0, 0, 0, 0.2), 0 0 0 5px rgba(255, 0, 0, 0.3); }
+    100% { box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3), 0 2px 3px rgba(0, 0, 0, 0.2), 0 0 0 0px rgba(255, 0, 0, 0.7); }
+}
+
+@keyframes pulse-timer { /* Pour timer temps bas */
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
